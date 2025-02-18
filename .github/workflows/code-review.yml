@@ -1,0 +1,23 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review_code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Fetch Pull Request Changes
+        run: |
+          git fetch origin main
+          git diff origin/main > changes.diff
+
+      - name: Run AI Code Review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python .github/scripts/review_code.py
