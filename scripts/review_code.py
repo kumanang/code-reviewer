@@ -36,6 +36,7 @@ headers = {
 }
 
 data = {"body": review_comments}
+print(f"data: {data}")
 
 response = requests.post(github_api_url, headers=headers, json=data)
 
