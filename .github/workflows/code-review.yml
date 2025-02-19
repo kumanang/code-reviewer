@@ -26,6 +26,6 @@ jobs:
 
       - name: Run AI Code Review
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 /home/runner/work/code-reviewer/code-reviewer/scripts/review_code.py
