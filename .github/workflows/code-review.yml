@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -18,10 +19,10 @@ jobs:
       - name: Fetch Pull Request Changes
         run: |
           git fetch origin main
-          git diff origin/main > changes.diff
+          git diff origin/main -- ":!.github/*" > changes.diff
 
       - name: Run AI Code Review
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: "AIzaSyCG_xdy6Ye0tuYAG4T3r4V5tK6vTWsZ6ms"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/review_code.py
+        run: python .github/scripts/review_code.py "test_folder/example.py"
