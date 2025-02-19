@@ -18,7 +18,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # Generate review comments using Gemini
 model = genai.GenerativeModel("gemini-pro")
 response = model.generate_content(f"""
-You are an AI code reviewer. Review the following code diff and list out lines and file names which can be improved:
+You are an AI code reviewer. Review the following code diff and list the name of the script alongwith the lines which can be improved:
 {code_diff}
 """)
 
