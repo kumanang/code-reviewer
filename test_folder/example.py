@@ -14,7 +14,7 @@ def running_total():
             number = float(user_input)
             numbers.append(number)  # Store the number in the list
             total += number
-            print(f"Running total: {total}")
+            print(f"Running total: {total}. you did a good job")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
