@@ -19,7 +19,7 @@ jobs:
       - name: Fetch Pull Request Changes
         run: |
           git fetch origin main
-          git diff origin/main > changes.diff
+          git diff origin/main -- ":!.github/*" > changes.diff
 
       - name: Run AI Code Review
         env:
