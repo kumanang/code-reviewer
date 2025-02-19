@@ -15,17 +15,17 @@ jobs:
 
       - name: listing all files
         run: ls -al
-#
-#      - name: Install Dependencies
-#        run: pip install google-generativeai requests
-#
-#      - name: Fetch Pull Request Changes
-#        run: |
-#          git fetch origin main
-#          git diff origin/main > changes.diff
-#
-#      - name: Run AI Code Review
-#        env:
-#          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: python scripts/review_code.py
+
+      - name: Install Dependencies
+        run: pip install google-generativeai requests
+
+      - name: Fetch Pull Request Changes
+        run: |
+          git fetch origin main
+          git diff origin/main > changes.diff
+
+      - name: Run AI Code Review
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 /home/runner/work/code-reviewer/code-reviewer/scripts/review_code.py
