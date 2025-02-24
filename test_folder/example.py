@@ -37,18 +37,18 @@ from cec_python_google_cloud_async.utilities import (
 
 assert sys.version_info >= (3, 9), "Script requires Python 3.9+."
 
-log_level = "INFO"
-logger = getLogger(__name__)
-logger.setLevel(level=log_level.upper())
-logger.addHandler(StreamHandler(sys.stdout))
+                log_level = "INFO"
+                logger = getLogger(__name__)
+                logger.setLevel(level=log_level.upper())
+                logger.addHandler(StreamHandler(sys.stdout))
 
 
 def get_lifecycle_rules(bucket: dict):
-    lifecycle_rules_count = 0
-    deletion_rule = False
-    noncurrent_version_deletion_rule = False
-    transition_rule = False
-    noncurrent_version_transition_rule = False
+        lifecycle_rules_count = 0
+        deletion_rule = False
+        noncurrent_version_deletion_rule = False
+        transition_rule = False
+        noncurrent_version_transition_rule = False
 
     if lifecycle := bucket.get("lifecycle"):
         lifecycle_rules_count = len(lifecycle["rule"])
