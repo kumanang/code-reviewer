@@ -7,7 +7,7 @@ def calculate_factorial(n):
 def fibonacci_sequence(n):
     """Generates a Fibonacci sequence up to n terms."""
     sequence = [0, 1]
-    for _ in range(n - 2):
+            for _ in range(n - 2):
         sequence.append(sequence[-1] + sequence[-2])
     return sequence
 
