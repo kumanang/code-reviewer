@@ -21,7 +21,7 @@ def sum_of_squares(numbers):
 
 # Main execution
 if __name__ == "__main__":
-    num = 5
+                num = 5
     numbers_list = [2, 4, 6, 8, 10]
 
     print(f"Factorial of {num}: {calculate_factorial(num)}")
