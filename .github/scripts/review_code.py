@@ -30,6 +30,7 @@ Only return the JSON array, no additional text.
 # Extract AI review comments (assumed to be JSON)
 try:
     review_comments = eval(response.text)  # Convert AI response to list
+    print(f"response: {review_comments}")
 except Exception as e:
     print("❌ Error parsing AI response:", str(e))
     review_comments = []
