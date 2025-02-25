@@ -24,7 +24,7 @@ if __name__ == "__main__":
                 num = 5
     numbers_list = [2, 4, 6, 8, 10]
 
-    print(f"Factorial of {num}: {calculate_factorial(num)}")
+      print(f"Factorial of {num}: {calculate_factorial(num)}")
     print(f"Fibonacci sequence ({num} terms): {fibonacci_sequence(num)}")
     print(f"Average of {numbers_list}: {calculate_average(numbers_list)}")
     print(f"Sum of squares of {numbers_list}: {sum_of_squares(numbers_list)}")
