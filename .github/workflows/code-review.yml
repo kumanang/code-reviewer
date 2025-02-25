@@ -30,3 +30,9 @@ jobs:
           GOOGLE_API_KEY: "AIzaSyCG_xdy6Ye0tuYAG4T3r4V5tK6vTWsZ6ms"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/review_code.py "test_folder/example.py"
+
+      - name: Comment on PR
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+               -d '{"body": "This is an automated comment."}'
