@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize]
     
 permissions:
-  pull-requests: write-all
+  pull-requests: write
   contents: read
   
 jobs:
