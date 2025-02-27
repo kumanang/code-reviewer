@@ -26,7 +26,7 @@ jobs:
 
       - name: Run AI Code Review
         env:
-          GOOGLE_API_KEY: "AIzaSyCG_xdy6Ye0tuYAG4T3r4V5tK6vTWsZ6ms"
+          GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/review_code.py
 
@@ -36,14 +36,34 @@ jobs:
           echo "Comments: $COMMENTS"
 
           if [ "$COMMENTS" != "[]" ]; then
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            COMMIT_ID=${{ github.event.pull_request.head.sha }}
+
+            # Get PR diff to find correct positions
+            DIFF_URL="https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/files"
+            DIFF=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "$DIFF_URL")
+
             while IFS= read -r comment; do
               FILE=$(echo "$comment" | jq -r '.file')
               LINE=$(echo "$comment" | jq -r '.line')
               TEXT=$(echo "$comment" | jq -r '.comment')
 
+              # Find the correct position in the diff
+              POSITION=$(echo "$DIFF" | jq --arg FILE "$FILE" --argjson LINE "$LINE" '
+                .[] | select(.filename == $FILE) | .patch |
+                capture("@@ -\\d+,\\d+ \\+\\d+,\\d+ @@") |
+                .["+"] | tonumber + ($LINE - 1)
+              ')
+
+              if [ -z "$POSITION" ]; then
+                echo "⚠️ Could not determine position for $FILE (line $LINE). Skipping."
+                continue
+              fi
+
+              # Post inline review comment
               curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                    -H "Accept: application/vnd.github.v3+json" \
-                   https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments \
-                   -d "{\"body\": \"$TEXT\", \"commit_id\": \"${{ github.event.pull_request.head.sha }}\", \"path\": \"$FILE\", \"position\": $LINE}"
+                   "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/comments" \
+                   -d "{\"body\": \"$TEXT\", \"commit_id\": \"$COMMIT_ID\", \"path\": \"$FILE\", \"position\": $POSITION}"
             done <<< "$(echo $COMMENTS | jq -c '.[]')"
           fi
