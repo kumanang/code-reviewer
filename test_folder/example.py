@@ -15,6 +15,7 @@ def running_total():
             numbers.append(number)  # Store the number in the list
             total += number
             print(f"Running total: {total}")
+            logger.info(f"Number entered: {number}") # incorrect line of code
         except ValueError:
             print("Invalid input. Please enter a number.")
 
