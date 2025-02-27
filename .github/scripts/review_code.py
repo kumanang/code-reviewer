@@ -1,22 +1,34 @@
 import os
-import google.generativeai as genai
+import json
 import requests
+import google.generativeai as genai
 
 # Load API keys and GitHub environment variables
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")  # Ensure this matches workflow
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 REPO = os.getenv("GITHUB_REPOSITORY")
-PR_NUMBER = os.getenv("GITHUB_REF").split("/")[-1]
+PR_NUMBER = os.getenv("GITHUB_EVENT_PATH")
+
+# Extract PR number from GitHub event JSON
+if PR_NUMBER:
+    with open(PR_NUMBER, "r") as f:
+        event_data = json.load(f)
+        PR_NUMBER = event_data["number"]
 
 # Read the code changes (diff)
-with open("changes.diff", "r") as file:
+diff_file = "changes.diff"
+if not os.path.exists(diff_file) or os.stat(diff_file).st_size == 0:
+    print("⚠️ No code changes detected. Exiting.")
+    exit(0)
+
+with open(diff_file, "r") as file:
     code_diff = file.read()
 
-# Initialize Gemini API
+# Initialize Gemini AI
 genai.configure(api_key=GEMINI_API_KEY)
-
-# Generate review comments using Gemini
 model = genai.GenerativeModel("gemini-pro")
+
+# Generate review comments using Gemini AI
 response = model.generate_content(f"""
 You are an AI code reviewer. Review the following code diff and provide feedback as structured JSON in this format:
 [
@@ -27,43 +39,18 @@ Only return the JSON array, no additional text.
 {code_diff}
 """)
 
-# Extract AI review comments (assumed to be JSON)
+# Parse AI response safely
 try:
-    review_comments = eval(response.text)  # Convert AI response to list
-    print(f"response: {review_comments}")
-except Exception as e:
-    print("❌ Error parsing AI response:", str(e))
+    review_comments = json.loads(response.text)
+except json.JSONDecodeError as e:
+    print(f"❌ Error parsing AI response: {str(e)}")
     review_comments = []
 
-# Function to post comments to GitHub PR
-def post_pr_comment(file, line, comment):
-    """Post an inline review comment on a GitHub pull request."""
-    url = f"https://api.github.com/repos/{REPO}/pulls/{PR_NUMBER}/comments"
-    
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-    
-    data = {
-        "body": comment,
-        "commit_id": os.getenv("GITHUB_SHA"),  # Ensure the comment is attached to the latest commit
-        "path": file,
-        "line": line,
-        "side": "RIGHT"  # Comment on the right side (new changes)
-    }
-    
-    response = requests.post(url, headers=headers, json=data)
+# Save AI-generated comments to a file
+with open("ai_review_comments.json", "w") as f:
+    json.dump(review_comments, f)
 
-    if response.status_code == 201:
-        print(f"✅ Comment posted on {file} (Line {line}): {comment}")
-    else:
-        print(f"❌ Failed to post comment on {file} (Line {line}):", response.text)
-
-# Post each AI-generated comment
 if review_comments:
-    print("✍️ Posting AI-generated comments on PR...")
-    for review in review_comments:
-        post_pr_comment(review["file"], review["line"], review["comment"])
+    print(f"✅ AI-generated comments saved to ai_review_comments.json ({len(review_comments)} suggestions).")
 else:
-    print("⚠️ No AI review comments to post.")
+    print("⚠️ No AI review comments generated.")
