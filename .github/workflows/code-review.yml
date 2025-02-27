@@ -3,36 +3,47 @@ name: AI Code Review
 on:
   pull_request:
     types: [opened, synchronize]
-    
+
 permissions:
   pull-requests: write
   contents: read
-  
+
 jobs:
   review_code:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Install Dependencies
-        run: pip install google-generativeai requests
+        run: pip install google-generativeai requests jq
 
       - name: Fetch Pull Request Changes
         run: |
           git fetch origin main
-          git diff origin/main -- ":!.github/*" > changes.diff
+          git diff --unified=0 origin/main -- ':!.github/*' > changes.diff
 
       - name: Run AI Code Review
         env:
-          GOOGLE_API_KEY: "AIzaSyCG_xdy6Ye0tuYAG4T3r4V5tK6vTWsZ6ms"
+          GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python .github/scripts/review_code.py "test_folder/example.py"
+        run: python .github/scripts/review_code.py
 
       - name: Comment on PR
         run: |
-          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-               -d '{"body": "This is an automated comment."}'
+          COMMENTS=$(cat ai_review_comments.json)
+          echo "Comments: $COMMENTS"
+
+          if [ "$COMMENTS" != "[]" ]; then
+            while IFS= read -r comment; do
+              FILE=$(echo "$comment" | jq -r '.file')
+              LINE=$(echo "$comment" | jq -r '.line')
+              TEXT=$(echo "$comment" | jq -r '.comment')
+
+              curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                   -H "Accept: application/vnd.github.v3+json" \
+                   https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments \
+                   -d "{\"body\": \"$TEXT\", \"commit_id\": \"${{ github.event.pull_request.head.sha }}\", \"path\": \"$FILE\", \"position\": $LINE}"
+            done <<< "$(echo $COMMENTS | jq -c '.[]')"
+          fi
