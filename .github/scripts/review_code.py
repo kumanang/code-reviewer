@@ -26,10 +26,7 @@ with open(diff_file, "r") as file:
 
 # Initialize Gemini AI
 genai.configure(api_key=GEMINI_API_KEY)
-models = genai.list_models()
-for model in models:
-    print(model.name)
-model = genai.GenerativeModel("gemini-1.0-pro")
+model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
 # Generate review comments using Gemini AI
 response = model.generate_content(f"""
