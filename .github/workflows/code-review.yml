@@ -32,8 +32,7 @@ jobs:
 
       - name: Comment on PR
         run: |
-          COMMENTS=$(cat ai_review_comments.json)
-          
+          COMMENTS=$(cat ai_review_comments.json) 
 
           if [ "$COMMENTS" != "[]" ]; then
             PR_NUMBER=${{ github.event.pull_request.number }}
@@ -48,22 +47,16 @@ jobs:
               LINE=$(echo "$comment" | jq -r '.line')
               TEXT=$(echo "$comment" | jq -r '.comment')
 
-              # Find the correct position in the diff
-              POSITION=$(echo "$DIFF" | jq --arg FILE "$FILE" --argjson LINE "$LINE" '
-                .[] | select(.filename == $FILE) | .patch |
-                capture("@@ -\\d+,\\d+ \\+(?<start>\\d+),\\d+ @@") |
-                .start | tonumber + ($LINE - 1) // empty
-              ')
-
-              if [ -z "$POSITION" ] || [ "$POSITION" == "null" ]; then
-                echo "⚠️ Could not determine position for $FILE (line $LINE). Skipping."
+              # Check if the file is in the PR diff
+              if ! echo "$DIFF" | jq -e --arg FILE "$FILE" '.[] | select(.filename == $FILE)' > /dev/null; then
+                echo "⚠️ Skipping $FILE: Not found in PR diff."
                 continue
               fi
 
-              # Post inline review comment
+              # Post inline review comment using `line` instead of `position`
               curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                    -H "Accept: application/vnd.github.v3+json" \
                    "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/comments" \
-                   -d "{\"body\": \"$TEXT\", \"commit_id\": \"$COMMIT_ID\", \"path\": \"$FILE\", \"position\": $POSITION}"
+                   -d "{\"body\": \"$TEXT\", \"commit_id\": \"$COMMIT_ID\", \"path\": \"$FILE\", \"line\": $LINE, \"side\": \"RIGHT\"}"
             done <<< "$(echo $COMMENTS | jq -c '.[]')"
           fi
