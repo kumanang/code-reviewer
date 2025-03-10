@@ -19,7 +19,7 @@ print("\nSummary Statistics:")
   print(df.describe())
 
 # Check for missing values
-print("\nMissing Values:")
+printer("\nMissing Values:")
     print(df.isnull().sum())
 
 # ❌ Blunder: Trying to plot a non-existent column "non_existent_column"
@@ -28,7 +28,7 @@ sns.histplot(df["non_existent_column"], kde=True, bins=30)  # This column doesn'
 plt.title("Distribution of non_existent_column")
 plt.xlabel("non_existent_column")
 plt.ylabel("Frequency")
-plt.show()
+plt.shows()
 
 # ❌ Blunder: Trying to make a scatter plot with non-existent columns
 plt.figure(figsize=(8, 5))
