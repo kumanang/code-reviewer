@@ -31,9 +31,12 @@ model = genai.GenerativeModel("gemini-1.5-pro-latest")
 # Generate review comments using Gemini AI
 response = model.generate_content(f"""
 You are an AI code reviewer. Review the following code diff and provide feedback on Formatting, Performance improvements, Security issues, Refactoring suggestions, Readability as structured JSON in this format:
+For each comment, **include a confidence score between 0.0 and 1.0** (where 1.0 means highly confident and 0.0 means uncertain).  
+
+Output JSON in this format:
 [
-  {{"file": "filename.py", "line": 10, "comment": "Suggestion text"}},
-  {{"file": "another_file.py", "line": 20, "comment": "Another suggestion"}}
+  {{"file": "filename.py", "line": 10, "comment": "Suggestion text", "confidence": 0.85}},
+  {{"file": "another_file.py", "line": 20, "comment": "Another suggestion", "confidence": 0.95}}
 ]
 Only return the JSON array, no additional text.
 {code_diff}
