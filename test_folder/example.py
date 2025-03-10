@@ -12,11 +12,11 @@ print(df.info())
 
 # Display first few rows
 print("\nFirst 5 Rows:")
-print(df.head())
+print(df.head())) 
 
 # Summary statistics
 print("\nSummary Statistics:")
-print(df.describe())
+  print(df.describe())
 
 # Check for missing values
 print("\nMissing Values:")
