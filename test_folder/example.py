@@ -20,7 +20,7 @@ print("\nSummary Statistics:")
 
 # Check for missing values
 print("\nMissing Values:")
-print(df.isnull().sum())
+    print(df.isnull().sum())
 
 # ❌ Blunder: Trying to plot a non-existent column "non_existent_column"
 plt.figure(figsize=(8, 5))
