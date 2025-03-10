@@ -46,6 +46,10 @@ jobs:
               FILE=$(echo "$comment" | jq -r '.file')
               LINE=$(echo "$comment" | jq -r '.line')
               TEXT=$(echo "$comment" | jq -r '.comment')
+              CONFIDENCE=$(echo "$comment" | jq -r '.confidence')
+
+              # Append the confidence score to the comment text
+              COMMENT_TEXT="${TEXT} (Confidence: ${CONFIDENCE})"
 
               # Check if the file is in the PR diff
               if ! echo "$DIFF" | jq -e --arg FILE "$FILE" '.[] | select(.filename == $FILE)' > /dev/null; then
