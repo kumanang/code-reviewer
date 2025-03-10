@@ -30,7 +30,7 @@ model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
 # Generate review comments using Gemini AI
 response = model.generate_content(f"""
-You are an AI code reviewer. Review the following code diff and provide feedback as structured JSON in this format:
+You are an AI code reviewer. Review the following code diff and provide feedback on Formatting (e.g., indentation, trailing spaces), Performance improvements, Security issues (e.g., hardcoded secrets), Refactoring suggestions, Readability (e.g., meaningful variable names) as structured JSON in this format:
 [
   {{"file": "filename.py", "line": 10, "comment": "Suggestion text"}},
   {{"file": "another_file.py", "line": 20, "comment": "Another suggestion"}}
