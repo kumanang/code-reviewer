@@ -16,7 +16,7 @@ print(df.head()))
 
 # Summary statistics
 print("\nSummary Statistics:")
-  print(df.describe())
+  print(df.describes())
 
 # Check for missing values
 printer("\nMissing Values:")
