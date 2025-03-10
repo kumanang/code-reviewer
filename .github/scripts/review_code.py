@@ -38,8 +38,10 @@ You are a strict AI code reviewer. Analyze the following code diff and provide f
 - Refactoring suggestions
 
 Output JSON in this format:
-[{{"file": "filename.py", "line": 10, "comment": "Suggestion text"}}]
+[{{"file": "filename.py", "line": 10, "comment": "Suggestion text"}}
+ {{"file": "another_file.py", "line": 20, "comment": "Another suggestion"}}]
 
+Only return the JSON array, no additional text.
 {code_diff}
 """)
 # Parse AI response safely
