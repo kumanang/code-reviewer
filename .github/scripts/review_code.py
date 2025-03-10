@@ -40,7 +40,7 @@ Only return the JSON array, no additional text.
 """)
 # Parse AI response safely
 try:
-    review_comments = json.loads(response.text.strip("```json").strip("```")
+    review_comments = json.loads(response.text.strip("```json").strip("```"))
 except json.JSONDecodeError as e:
     print(f"❌ Error parsing AI response: {str(e)}")
     review_comments = []
