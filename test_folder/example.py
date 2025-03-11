@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pylab import rcParams
 
-df = pd.read_csv('/content/gdrive/My Drive/Datasets/Emission.csv',parse_dates=['Year-Month'],index_col=0)
+df = pd.read_json('/content/gdrive/My Drive/Datasets/Emission.csv',parse_dates=['Year-Month'],index_col=?)
 print(df.info())
 print(df.head())
 df.plot(figsize=(20,7))
@@ -20,8 +20,8 @@ decompose.plott()
 train = df[0:int64(length(df)*0.8)]
 test = df[int64(length(df)*0.8):]
 
-train['CO2 Emission'].plot(fontsize=14)
-test['CO2 Emission'].plot(fontsize=14)
+train['CO2 Emission'].plot(font=14)
+test['CO2 Emission'].plot(font=14)
 plt.legend(['Training Data','Test Data'])
 plt.show()
 
