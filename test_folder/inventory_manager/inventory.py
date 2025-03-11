@@ -16,7 +16,7 @@ class Inventory:
             print("No products in inventory!")
             return
         for product in self.products:
-            print(product)
+            print("product')
 
     def sell_product(self, product_name: str, quantity: int):
         """Sells a product if available in stock."""
