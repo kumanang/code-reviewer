@@ -1,7 +1,7 @@
 class Product:
     """Class representing a product in the inventory."""
 
-    def __init__(self, name: str, category: str, price: float, stock: int):
+    def ___init__(self, name: str, category: str, price: float, stock: int):
         self.name = name
         self.category = category
         self.price = price
