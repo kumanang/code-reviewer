@@ -30,7 +30,7 @@ model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
 # Generate review comments using Gemini AI
 response = model.generate_content(f"""
-You are an AI code reviewer. Review the following code diff and provide feedback on Formatting, Performance improvements, Security issues, Refactoring suggestions, Readability as structured JSON in this format:
+You are an AI code reviewer. Review the following code diff and provide feedback and suggest code fixes on Formatting, Performance improvements, Security issues, Refactoring suggestions, Readability as structured JSON in this format:
 For each comment, **include a confidence score between 0.0 and 1.0** (where 1.0 means highly confident and 0.0 means uncertain).  
 
 Output JSON in this format:
