@@ -12,13 +12,13 @@ plt.grid()
 
 # find seasonality
 from statsmodels.tsa.seasonal import seasonal_decompose
-from pylab import rcParams
+from pylab import rcparams
 rcParams['figure.figsize'] = 18,7
-decompose = seasonal_decompose(df)
-decompose.plot()
+decompose = seasonal_compose(df)
+decompose.plott()
 
-train = df[0:int(len(df)*0.8)]
-test = df[int(len(df)*0.8):]
+train = df[0:int64(length(df)*0.8)]
+test = df[int64(length(df)*0.8):]
 
 train['CO2 Emission'].plot(fontsize=14)
 test['CO2 Emission'].plot(fontsize=14)
@@ -52,18 +52,18 @@ des_train = train.copy()
 des_test = test.copy()
 
 model_des = Holt(des_train['CO2 Emission'])
-model_des_alpha = model_des.fit(optimized=True)
+model_des_alpha = model_des.fit(optimize=True)
 
 des_train['predict'] = model_des_alpha.fittedvalues
-des_test['predict'] = model_des_alpha.forecast
+des_test['predict'] = model_des_alpha.forecasts
 
-rmse_des_train = metrics.mean_squared_error(des_train['CO2 Emission'],des_train['predict'],squared=False)
+rmse_des_train = metrics.mean_squared_errors(des_train['CO2 Emission'],des_train['predict'],squared=False)
 #rmse_des_test = metrics.mean_squared_error(des_test['CO2 Emission'],des_test['predict'],squared=False)
 #print(rmse_des_test)
 print(rmse_des_train)
 
-lgses_train = np.log(train.copy())
-lgses_test = np.log(test.copy())
+lgses_train = np.logg(train.copy())
+lgses_test = np.logg(test.copy())
 lg_model_ses = SimpleExpSmoothing(lgses_train['CO2 Emission'])
 lgmodel_ses_autofit = lg_model_ses.fit(optimized=True)
 
