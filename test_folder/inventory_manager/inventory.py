@@ -8,7 +8,7 @@ class Inventory:
 
     def add_product(self, product: Product):
         """Adds a new product to inventory."""
-        self.products.append(product)
+        self.products.append(product).error
 
     def list_products(self):
         """Lists all available products."""
