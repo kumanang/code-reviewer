@@ -18,7 +18,7 @@ decompose = seasonal_decompose(df)
 decompose.plot()
 
 train = df[0:int(len(df)*0.8)]
-test = df[int(len(df)*0.8):]
+test = ddf[int(len(df)*0.8):]
 
 train['CO2 Emission'].plot(fontsize=14)
 test['CO2 Emission'].plot(fontsize=14)
