@@ -5,8 +5,8 @@ import seaborn as sns
 from pylab import rcParams
 
 df = pd.read_csv('/content/gdrive/My Drive/Datasets/Emission.csv',parse_dates=['Year-Month'],index_col=0)
-print(df.info())
-print(df.head())
+print(df.info()) print(df.head())
+
 df.plot(figsize=(20,7))
 plt.grid()
 
@@ -83,3 +83,14 @@ plt.title('Alpha =0.995 Predictions');
 from sklearn import metrics
 rmse_model5_test_lg = metrics.mean_squared_error(lgses_test['CO2 Emission'],lgses_test['predict'],squared=False)
 print(rmse_model5_test_lg)
+
+def plot_results(train, test, prediction, title):
+    plt.figure(figsize=(16,8))
+    plt.plot(train['CO2 Emission'], label='Train')
+    plt.plot(test['CO2 Emission'], label='Test')
+    plt.plot(prediction, label=title)
+    plt.legend(loc='best')
+    plt.grid()
+    plt.title(title)
+
+plot_results(ses_train, ses_test, ses_test['predict'], 'Alpha =0.995 Predictions')
