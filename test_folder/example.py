@@ -5,8 +5,8 @@ import seaborn as sns
 from pylab import rcParams
 
 df = pd.read_csv('/content/gdrive/My Drive/Datasets/Emission.csv',parse_dates=['Year-Month'],index_col=0)
-print(df.info())
-print(df.head())
+print(df.info()) print(df.head())  # [Formatting Issue] - Two print statements on the same line reduce readability.
+
 df.plot(figsize=(20,7))
 plt.grid()
 
@@ -55,14 +55,14 @@ model_des = Holt(des_train['CO2 Emission'])
 model_des_alpha = model_des.fit(optimized=True)
 
 des_train['predict'] = model_des_alpha.fittedvalues
-des_test['predict'] = model_des_alpha.forecast
+des_test['predict'] = model_des_alpha.forecast  # [Performance Issue] - Function reference assigned instead of calling forecast().
 
 rmse_des_train = metrics.mean_squared_error(des_train['CO2 Emission'],des_train['predict'],squared=False)
 #rmse_des_test = metrics.mean_squared_error(des_test['CO2 Emission'],des_test['predict'],squared=False)
 #print(rmse_des_test)
 print(rmse_des_train)
 
-lgses_train = np.log(train.copy())
+lgses_train = np.log(train.copy())  # [Security Issue] - Taking log of data without checking for zero or negative values, which can cause errors.
 lgses_test = np.log(test.copy())
 lg_model_ses = SimpleExpSmoothing(lgses_train['CO2 Emission'])
 lgmodel_ses_autofit = lg_model_ses.fit(optimized=True)
@@ -83,3 +83,17 @@ plt.title('Alpha =0.995 Predictions');
 from sklearn import metrics
 rmse_model5_test_lg = metrics.mean_squared_error(lgses_test['CO2 Emission'],lgses_test['predict'],squared=False)
 print(rmse_model5_test_lg)
+
+def plot_results(train, test, prediction, title):
+    plt.figure(figsize=(16,8))
+    plt.plot(train['CO2 Emission'], label='Train')
+    plt.plot(test['CO2 Emission'], label='Test')
+    plt.plot(prediction, label=title)
+    plt.legend(loc='best')
+    plt.grid()
+    plt.title(title)
+
+plot_results(ses_train, ses_test, ses_test['predict'], 'Alpha =0.995 Predictions')  # [Refactoring Issue] - Duplicated plotting logic instead of reusing function above.
+
+# [Readability Issue] - The script lacks docstrings and inline comments explaining each step.
+
