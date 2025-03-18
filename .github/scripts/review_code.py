@@ -30,15 +30,28 @@ model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
 # Generate review comments using Gemini AI
 response = model.generate_content(f"""
-You are an AI code reviewer. Review the following code diff and provide feedback and suggest code fixes on Formatting, Performance improvements, Security issues, Refactoring suggestions, Readability as structured JSON in this format:
-For each comment, **include a confidence score between 0.0 and 1.0** (where 1.0 means highly confident and 0.0 means uncertain).  
+You are an AI code reviewer analyzing a **Git diff**. Review the following code changes and provide feedback on **Formatting, Performance, Security, Refactoring, and Readability**.
 
-Output JSON in this format:
+🚨 **Important**:
+- Use **ONLY the provided diff** to determine line numbers.
+- Extract **exact file names** and **line numbers** from the diff.
+- **Categorize each comment** using one of the following prefixes:  
+  - **Formatting:** for style issues  
+  - **Performance:** for efficiency improvements  
+  - **Security:** for vulnerabilities  
+  - **Refactoring:** for cleaner code structure  
+  - **Readability:** for code clarity  
+- Do **not guess** line numbers—only use what is available in the diff.
+
+🔹 **Return JSON in this exact format**:
 [
-  {{"file": "filename.py", "line": 10, "comment": "Suggestion text", "confidence": 0.85}},
-  {{"file": "another_file.py", "line": 20, "comment": "Another suggestion", "confidence": 0.95}}
+  {{"file": "filename.py", "line": 10, "comment": "Formatting: Consider using PEP8 conventions for better readability.", "confidence": 0.85}},
+  {{"file": "another_file.py", "line": 20, "comment": "Security: Use parameterized queries to prevent SQL injection.", "confidence": 0.95}}
 ]
-Only return the JSON array, no additional text.
+
+**Only return the JSON array—no additional text.**
+
+Here is the Git diff:
 {code_diff}
 """)
 # Parse AI response safely
