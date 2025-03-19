@@ -33,7 +33,7 @@ def format_users(users):
 
 def main():
   users = fetch_users()
-    formatted_users = format_users(users)
+        formatted_users = format_users(users)
     print(formatted_users)
 
 if __name__ == "__main__":
