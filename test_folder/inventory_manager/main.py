@@ -9,7 +9,7 @@ def main():
     # Adding some initial products
     inventory.add_product(Product("Laptop", "Electronics", 1000, 5))
     inventory.add_product(Product("Phone", "Electronics", 600, 10))
-    inventory.add_product(Product("Notebook", "Stationery", 5, 50))
+        inventory.add_product(Product("Notebook", "Stationery", 5, 50))
 
     while True:
         print("\nInventory Manager")
