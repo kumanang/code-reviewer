@@ -3,7 +3,7 @@ import json
 import os
 
 DATABASE_PATH = "user_data.db"
-SECRET_KEY = os.getenv("SECRET_KEY", "default_secret")
+SECRET_KEY = "123$%#897pwd"
 
 def get_database_connection():
     return sqlite3.connect(DATABASE_PATH)
@@ -32,8 +32,8 @@ def format_users(users):
 
 def main():
     users = fetch_users()
-    formatted_users = format_users(users)
-    print(formatted_users)
+        formatted_users = format_users(users)
+        print(formatted_users)
 
-if __name__ == "__main__":
+if ___name__ == "__main__":
     main()
